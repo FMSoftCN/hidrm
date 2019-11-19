@@ -170,7 +170,7 @@ struct _drm_intel_bo_gem {
 	const char *name;
 
 	/**
-	 * Kenel-assigned global name for this object
+	 * Kernel-assigned global name for this object
          *
          * List contains both flink named and prime fd'd objects
 	 */
@@ -1145,6 +1145,77 @@ drm_intel_bo_gem_create_from_name(drm_intel_bufmgr *bufmgr,
 		 gem_handle, sizeof(bo_gem->gem_handle), bo_gem);
 	HASH_ADD(name_hh, bufmgr_gem->name_table,
 		 global_name, sizeof(bo_gem->global_name), bo_gem);
+
+	memclear(get_tiling);
+	get_tiling.handle = bo_gem->gem_handle;
+	ret = drmIoctl(bufmgr_gem->fd,
+		       DRM_IOCTL_I915_GEM_GET_TILING,
+		       &get_tiling);
+	if (ret != 0)
+		goto err_unref;
+
+	bo_gem->tiling_mode = get_tiling.tiling_mode;
+	bo_gem->swizzle_mode = get_tiling.swizzle_mode;
+	/* XXX stride is unknown */
+	drm_intel_bo_gem_set_in_aperture_size(bufmgr_gem, bo_gem, 0);
+	DBG("bo_create_from_name: %d (%s)\n", handle, bo_gem->name);
+
+out:
+	pthread_mutex_unlock(&bufmgr_gem->lock);
+	return &bo_gem->bo;
+
+err_unref:
+	drm_intel_gem_bo_free(&bo_gem->bo);
+	pthread_mutex_unlock(&bufmgr_gem->lock);
+	return NULL;
+}
+
+/**
+ * Returns a drm_intel_bo wrapping the given buffer object handle.
+ */
+drm_public drm_intel_bo *
+drm_intel_bo_gem_create_from_handle(drm_intel_bufmgr *bufmgr,
+				    const char *name,
+				    unsigned int handle,
+				    unsigned long size)
+{
+	drm_intel_bufmgr_gem *bufmgr_gem = (drm_intel_bufmgr_gem *) bufmgr;
+	drm_intel_bo_gem *bo_gem;
+	int ret;
+	struct drm_i915_gem_get_tiling get_tiling;
+
+        /* First, see if someone has used a prime handle to get this
+         * object from the kernel before by looking through the list
+         * again for a matching gem_handle
+         */
+	HASH_FIND(handle_hh, bufmgr_gem->handle_table,
+		  &handle, sizeof(handle), bo_gem);
+	if (bo_gem) {
+		drm_intel_gem_bo_reference(&bo_gem->bo);
+		goto out;
+	}
+
+	bo_gem = calloc(1, sizeof(*bo_gem));
+	if (!bo_gem)
+		goto out;
+
+	atomic_set(&bo_gem->refcount, 1);
+	DRMINITLISTHEAD(&bo_gem->vma_list);
+
+	bo_gem->bo.size = size;
+	bo_gem->bo.offset = 0;
+	bo_gem->bo.offset64 = 0;
+	bo_gem->bo.virtual = NULL;
+	bo_gem->bo.bufmgr = bufmgr;
+	bo_gem->name = name;
+	bo_gem->validate_index = -1;
+	bo_gem->gem_handle = handle;
+	bo_gem->bo.handle = handle;
+	bo_gem->global_name = 0;
+	bo_gem->reusable = false;
+
+	HASH_ADD(handle_hh, bufmgr_gem->handle_table,
+		 gem_handle, sizeof(bo_gem->gem_handle), bo_gem);
 
 	memclear(get_tiling);
 	get_tiling.handle = bo_gem->gem_handle;
