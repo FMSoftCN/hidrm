@@ -60,6 +60,7 @@ libdrm_nouveau.pc
 libdrm_omap.pc
 libdrm_radeon.pc
 libdrm_vc4.pc
+libdrm_minigui.pc
 libkms.pc
 libtool
 ltmain.sh
