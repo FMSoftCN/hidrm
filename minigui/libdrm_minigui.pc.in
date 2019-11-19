@@ -1,0 +1,9 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: libdrm_minigui
+Description: Drivers for MiniGUI DRI engine
+Version: @PACKAGE_VERSION@
+Requires.private: libdrm

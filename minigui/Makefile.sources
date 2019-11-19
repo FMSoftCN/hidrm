@@ -1,0 +1,9 @@
+LIBDRM_MINIGUI_FILES := \
+    drivers.h \
+    drivers.c \
+    intel-reg.h \
+    intel-batchbuffer.h \
+    intel-context.h \
+    intel-i915-driver.c
+
+LIBDRM_MINIGUI_H_FILES :=
