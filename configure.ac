@@ -31,11 +31,11 @@ AC_CONFIG_AUX_DIR([build-aux])
 PKG_PROG_PKG_CONFIG
 
 # Require xorg-macros minimum of 1.12 for XORG_WITH_XSLTPROC
-m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.12 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.12)
-XORG_WITH_XSLTPROC
-XORG_MANPAGE_SECTIONS
+# m4_ifndef([XORG_MACROS_VERSION],
+#          [m4_fatal([must install xorg-macros 1.12 or later before running autoconf/autogen])])
+# XORG_MACROS_VERSION(1.12)
+# XORG_WITH_XSLTPROC
+# XORG_MANPAGE_SECTIONS
 
 AM_INIT_AUTOMAKE([1.10 foreign dist-bzip2])
 
