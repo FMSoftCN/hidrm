@@ -20,7 +20,7 @@
 
 AC_PREREQ([2.63])
 AC_INIT([libdrm],
-        [2.4.100],
+        [2.5.0],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=DRI],
         [libdrm])
 
@@ -90,7 +90,7 @@ AC_SUBST(libdrmdatadir)
 
 AC_ARG_ENABLE([udev],
               [AS_HELP_STRING([--enable-udev],
-                              [Enable support for using udev instead of mknod (default: disabled)])],
+              [Enable support for using udev instead of mknod (default: disabled)])],
               [UDEV=$enableval], [UDEV=no])
 
 AC_ARG_ENABLE(libkms,
@@ -100,63 +100,68 @@ AC_ARG_ENABLE(libkms,
 
 AC_ARG_ENABLE(intel,
 	      AS_HELP_STRING([--disable-intel],
-	      [Enable support for intel's KMS API (default: auto, enabled on x86)]),
+	      ["Enable support for intel's KMS API (default: auto, enabled on x86)"]),
 	      [INTEL=$enableval], [INTEL=auto])
 
 AC_ARG_ENABLE(radeon,
 	      AS_HELP_STRING([--disable-radeon],
-	      [Enable support for radeon's KMS API (default: auto)]),
+	      ["Enable support for radeon's KMS API (default: auto)"]),
 	      [RADEON=$enableval], [RADEON=auto])
 
 AC_ARG_ENABLE(amdgpu,
 	      AS_HELP_STRING([--disable-amdgpu],
-	      [Enable support for amdgpu's KMS API (default: auto)]),
+	      ["Enable support for amdgpu's KMS API (default: auto)"]),
 	      [AMDGPU=$enableval], [AMDGPU=auto])
 
 AC_ARG_ENABLE(nouveau,
 	      AS_HELP_STRING([--disable-nouveau],
-	      [Enable support for nouveau's KMS API (default: auto)]),
+	      ["Enable support for nouveau's KMS API (default: auto)"]),
 	      [NOUVEAU=$enableval], [NOUVEAU=auto])
 
 AC_ARG_ENABLE(vmwgfx,
 	      AS_HELP_STRING([--disable-vmwgfx],
-	      [Enable support for vmwgfx's KMS API (default: yes)]),
+	      ["Enable support for vmwgfx's KMS API (default: yes)"]),
 	      [VMWGFX=$enableval], [VMWGFX=yes])
 
 AC_ARG_ENABLE(omap-experimental-api,
 	      AS_HELP_STRING([--enable-omap-experimental-api],
-	      [Enable support for OMAP's experimental API (default: disabled)]),
+	      ["Enable support for OMAP's experimental API (default: disabled)"]),
 	      [OMAP=$enableval], [OMAP=no])
 
 AC_ARG_ENABLE(exynos-experimental-api,
 	      AS_HELP_STRING([--enable-exynos-experimental-api],
-	      [Enable support for EXYNOS's experimental API (default: disabled)]),
+	      ["Enable support for EXYNOS's experimental API (default: disabled)"]),
 	      [EXYNOS=$enableval], [EXYNOS=no])
 
 AC_ARG_ENABLE(freedreno,
 	      AS_HELP_STRING([--disable-freedreno],
-	      [Enable support for freedreno's KMS API (default: auto, enabled on arm)]),
+	      ["Enable support for freedreno's KMS API (default: auto, enabled on arm)"]),
 	      [FREEDRENO=$enableval], [FREEDRENO=auto])
 
 AC_ARG_ENABLE(freedreno-kgsl,
 	      AS_HELP_STRING([--enable-freedreno-kgsl],
-	      [Enable support for freedreno's to use downstream android kernel API (default: disabled)]),
+	      ["Enable support for freedreno's to use downstream android kernel API (default: disabled)"]),
 	      [FREEDRENO_KGSL=$enableval], [FREEDRENO_KGSL=no])
 
 AC_ARG_ENABLE(tegra-experimental-api,
 	      AS_HELP_STRING([--enable-tegra-experimental-api],
-	      [Enable support for Tegra's experimental API (default: disabled)]),
+	      ["Enable support for Tegra's experimental API (default: disabled)"]),
 	      [TEGRA=$enableval], [TEGRA=no])
 
 AC_ARG_ENABLE(vc4,
 	      AS_HELP_STRING([--disable-vc4],
-	      [Enable support for vc4's API (default: auto, enabled on arm)]),
+	      ["Enable support for vc4's API (default: auto, enabled on arm)"]),
 	      [VC4=$enableval], [VC4=auto])
 
 AC_ARG_ENABLE(etnaviv-experimental-api,
 	      AS_HELP_STRING([--enable-etnaviv-experimental-api],
-	      [Enable support for etnaviv's experimental API (default: disabled)]),
+	      ["Enable support for etnaviv's experimental API (default: disabled)"]),
 	      [ETNAVIV=$enableval], [ETNAVIV=no])
+
+AC_ARG_ENABLE(minigui,
+	      AS_HELP_STRING([--disable-minigui],
+	      ["Enable support for MiniGUI's DRI engine drivers (default: auto)"]),
+	      [MINIGUI=$enableval], [MINIGUI=auto])
 
 AC_ARG_ENABLE(install-test-programs,
 		  AS_HELP_STRING([--enable-install-test-programs],
@@ -337,6 +342,9 @@ else
 			*)		VC4=no ;;
 		esac
 	fi
+	if test "x$MINIGUI" = xauto; then
+		PKG_CHECK_MODULES([MINIGUI], [minigui >= 4.0.3], [MINIGUI=yes], [MINIGUI=no])
+	fi
 fi
 
 if test "x$INTEL" != "xno"; then
@@ -455,6 +463,8 @@ else
 	AC_DEFINE(HAVE_VC4, 0)
 fi
 
+AM_CONDITIONAL(HAVE_MINIGUI, [test "x$MINIGUI" = xyes])
+
 AM_CONDITIONAL(HAVE_ETNAVIV, [test "x$ETNAVIV" = xyes])
 
 AM_CONDITIONAL(HAVE_INSTALL_TESTS, [test "x$INSTALL_TESTS" = xyes])
@@ -569,6 +579,8 @@ AC_CONFIG_FILES([
 	vc4/libdrm_vc4.pc
 	etnaviv/Makefile
 	etnaviv/libdrm_etnaviv.pc
+	minigui/Makefile
+	minigui/libdrm_minigui.pc
 	tests/Makefile
 	tests/modeprint/Makefile
 	tests/modetest/Makefile
@@ -590,16 +602,17 @@ AC_OUTPUT
 echo ""
 echo "$PACKAGE_STRING will be compiled with:"
 echo ""
-echo "  libkms         $LIBKMS"
-echo "  Intel API      $INTEL"
-echo "  vmwgfx API     $VMWGFX"
-echo "  Radeon API     $RADEON"
-echo "  AMDGPU API     $AMDGPU"
-echo "  Nouveau API    $NOUVEAU"
-echo "  OMAP API       $OMAP"
-echo "  EXYNOS API     $EXYNOS"
-echo "  Freedreno API  $FREEDRENO (kgsl: $FREEDRENO_KGSL)"
-echo "  Tegra API      $TEGRA"
-echo "  VC4 API        $VC4"
-echo "  Etnaviv API    $ETNAVIV"
+echo "  libkms          $LIBKMS"
+echo "  Intel API       $INTEL"
+echo "  vmwgfx API      $VMWGFX"
+echo "  Radeon API      $RADEON"
+echo "  AMDGPU API      $AMDGPU"
+echo "  Nouveau API     $NOUVEAU"
+echo "  OMAP API        $OMAP"
+echo "  EXYNOS API      $EXYNOS"
+echo "  Freedreno API   $FREEDRENO (kgsl: $FREEDRENO_KGSL)"
+echo "  Tegra API       $TEGRA"
+echo "  VC4 API         $VC4"
+echo "  Etnaviv API     $ETNAVIV"
+echo "  MiniGUI Drivers $MINIGUI"
 echo ""

@@ -31,6 +31,7 @@ AM_DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-amdgpu \
 	--enable-nouveau \
 	--enable-vc4 \
+	--enable-minigui \
 	--enable-vmwgfx \
 	--enable-omap-experimental-api \
 	--enable-exynos-experimental-api \
@@ -90,6 +91,10 @@ if HAVE_ETNAVIV
 ETNAVIV_SUBDIR = etnaviv
 endif
 
+if HAVE_MINIGUI
+MINIGUI_SUBDIR = minigui
+endif
+
 if BUILD_MANPAGES
 if HAVE_MANPAGES_STYLESHEET
 MAN_SUBDIR = man
@@ -109,6 +114,7 @@ SUBDIRS = \
 	$(TEGRA_SUBDIR) \
 	$(VC4_SUBDIR) \
 	$(ETNAVIV_SUBDIR) \
+	$(MINIGUI_SUBDIR) \
 	data \
 	tests \
 	$(MAN_SUBDIR)
@@ -165,6 +171,7 @@ EXTRA_DIST = \
 	tests/util/meson.build \
 	tests/vbltest/meson.build \
 	vc4/meson.build \
+	minigui/meson.build \
 	meson.build \
 	meson_options.txt
 
