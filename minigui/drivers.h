@@ -40,8 +40,17 @@
 #ifndef _DRM_MINIGUI_DRIVERS_H_
 #define _DRM_MINIGUI_DRIVERS_H_
 
-#ifdef HAVE_INTEL
-DriDriverOps* _cairo_minigui_device_drm_get_i915_driver(void);
+#ifdef __cplusplus
+extern "C" {
+#endif  /* __cplusplus */
+
+#if HAVE_INTEL
+DriDriverOps* _drm_device_get_i915_driver(int device_fd);
 #endif
 
+#ifdef __cplusplus
+}
+#endif  /* __cplusplus */
+
 #endif /* _DRM_MINIGUI_DRIVERS_H_ */
+

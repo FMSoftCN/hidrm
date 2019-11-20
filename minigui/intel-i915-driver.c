@@ -909,7 +909,7 @@ static int i915_copy_blit (DriDriver *driver,
     return -1;
 }
 
-DriDriverOps* _cairo_minigui_device_drm_get_i915_driver(void)
+DriDriverOps* _drm_device_get_i915_driver(int device_fd)
 {
     static DriDriverOps i915_driver = {
         .create_driver = i915_create_driver,

@@ -54,8 +54,6 @@
 #undef _DEBUG
 #include <minigui/common.h>
 
-#ifdef __TARGET_EXTERNAL__
-
 #include <minigui/minigui.h>
 #include <minigui/gdi.h>
 #include <minigui/exstubs.h>
@@ -64,13 +62,13 @@
 
 #include "drivers.h"
 
-DriDriverOps* __dri_ex_driver_get(const char* driver_name)
+extern DriDriverOps* __dri_ex_driver_get(const char* driver_name, int device_fd)
 {
     _MG_PRINTF("%s called with driver name: %s\n", __func__, driver_name);
 
     if (strcmp(driver_name, "i915") == 0) {
-#ifdef HAVE_INTEL
-        return _cairo_minigui_device_drm_get_i915_driver();
+#if HAVE_INTEL
+        return _drm_device_get_i915_driver(device_fd);
 #endif
     }
 
@@ -79,5 +77,3 @@ DriDriverOps* __dri_ex_driver_get(const char* driver_name)
 }
 
 #endif /* _MGGAL_DRI */
-
-#endif /* __TARGET_EXTERNAL__ */
