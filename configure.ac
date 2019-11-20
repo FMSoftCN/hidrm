@@ -158,11 +158,6 @@ AC_ARG_ENABLE(etnaviv-experimental-api,
 	      ["Enable support for etnaviv's experimental API (default: disabled)"]),
 	      [ETNAVIV=$enableval], [ETNAVIV=no])
 
-AC_ARG_ENABLE(minigui,
-	      AS_HELP_STRING([--disable-minigui],
-	      ["Enable support for MiniGUI's DRI engine drivers (default: auto)"]),
-	      [MINIGUI=$enableval], [MINIGUI=auto])
-
 AC_ARG_ENABLE(install-test-programs,
 		  AS_HELP_STRING([--enable-install-test-programs],
 		  [Install test programs (default: no)]),
@@ -341,9 +336,6 @@ else
 			arm*|aarch64)	VC4=yes ;;
 			*)		VC4=no ;;
 		esac
-	fi
-	if test "x$MINIGUI" = xauto; then
-		PKG_CHECK_MODULES([MINIGUI], [minigui >= 4.0.3], [MINIGUI=yes], [MINIGUI=no])
 	fi
 fi
 
@@ -588,8 +580,6 @@ AC_CONFIG_FILES([
 	vc4/libdrm_vc4.pc
 	etnaviv/Makefile
 	etnaviv/libdrm_etnaviv.pc
-	minigui/Makefile
-	minigui/libdrm_minigui.pc
 	tests/Makefile
 	tests/modeprint/Makefile
 	tests/modetest/Makefile
