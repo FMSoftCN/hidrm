@@ -463,9 +463,18 @@ else
 	AC_DEFINE(HAVE_VC4, 0)
 fi
 
+AM_CONDITIONAL(HAVE_ETNAVIV, [test "x$ETNAVIV" = xyes])
+
 AM_CONDITIONAL(HAVE_MINIGUI, [test "x$MINIGUI" = xyes])
 
-AM_CONDITIONAL(HAVE_ETNAVIV, [test "x$ETNAVIV" = xyes])
+if test "x$MINIGUI" = xyes; then
+	MINIGUI_LIBS=""
+	if test "x$INTEL" = xyes; then
+		MINIGUI_LIBS="$MINIGUI_LIBS ../intel/libdrm_intel.la"
+	fi
+# add more MINIGUI_LIBS here
+	AC_SUBST(MINIGUI_LIBS)
+fi
 
 AM_CONDITIONAL(HAVE_INSTALL_TESTS, [test "x$INSTALL_TESTS" = xyes])
 
