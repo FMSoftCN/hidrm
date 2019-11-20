@@ -26,10 +26,8 @@ include Makefile.sources
 
 AM_CFLAGS = \
 	$(WARN_CFLAGS) \
-	-fvisibility=hidden \
 	-I$(top_srcdir) \
 	$(PTHREADSTUBS_CFLAGS) \
-	$(PCIACCESS_CFLAGS) \
 	$(VALGRIND_CFLAGS) \
 	-I$(top_srcdir)/include/drm
 
@@ -37,9 +35,7 @@ libdrm_minigui_la_LTLIBRARIES = libdrm_minigui.la
 libdrm_minigui_ladir = $(libdir)
 libdrm_minigui_la_LDFLAGS = -version-number 1:0:0 -no-undefined
 libdrm_minigui_la_LIBADD = ../libdrm.la \
-	@PTHREADSTUBS_LIBS@ \
-	@PCIACCESS_LIBS@ \
-	@CLOCK_LIB@
+	@MINIGUI_LIBS@
 
 libdrm_minigui_la_SOURCES = $(LIBDRM_MINIGUI_FILES)
 
