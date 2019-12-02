@@ -41,7 +41,7 @@ ext_libdrm_intel = declare_dependency(
 )
 
 install_headers(
-  'intel_bufmgr.h', 'intel_aub.h', 'intel_debug.h',
+  'intel_bufmgr.h', 'intel_chipset.h', 'intel_aub.h', 'intel_debug.h',
   subdir : 'libdrm',
 )
 

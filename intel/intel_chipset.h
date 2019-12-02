@@ -329,10 +329,18 @@
 
 /* New platforms use kernel pci ids */
 #include <stdbool.h>
-#include <libdrm_macros.h>
+//#include <libdrm_macros.h>
 
-drm_private bool intel_is_genx(unsigned int devid, int gen);
-drm_private bool intel_get_genx(unsigned int devid, int *gen);
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+bool intel_is_genx(unsigned int devid, int gen);
+bool intel_get_genx(unsigned int devid, int *gen);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #define IS_GEN9(devid) intel_is_genx(devid, 9)
 #define IS_GEN10(devid) intel_is_genx(devid, 10)
