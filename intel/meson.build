@@ -31,7 +31,7 @@ libdrm_intel = shared_library(
   link_with : libdrm,
   dependencies : [dep_pciaccess, dep_pthread_stubs, dep_rt, dep_valgrind, dep_atomic_ops],
   c_args : libdrm_c_args,
-  version : '1.0.0',
+  version : '2.0.0',
   install : true,
 )
 

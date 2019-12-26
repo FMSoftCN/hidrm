@@ -21,7 +21,7 @@
 project(
   'libdrm',
   ['c'],
-  version : '2.4.100',
+  version : '2.5.0',
   license : 'MIT',
   meson_version : '>= 0.43',
   default_options : ['buildtype=debugoptimized', 'c_std=gnu99'],
@@ -297,7 +297,7 @@ libdrm = shared_library(
   c_args : libdrm_c_args,
   dependencies : [dep_valgrind, dep_rt, dep_m],
   include_directories : inc_drm,
-  version : '2.4.0',
+  version : '2.5.0',
   install : true,
 )
 
