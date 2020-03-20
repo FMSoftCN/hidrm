@@ -457,17 +457,6 @@ fi
 
 AM_CONDITIONAL(HAVE_ETNAVIV, [test "x$ETNAVIV" = xyes])
 
-AM_CONDITIONAL(HAVE_MINIGUI, [test "x$MINIGUI" = xyes])
-
-if test "x$MINIGUI" = xyes; then
-	MINIGUI_LIBS=""
-	if test "x$INTEL" = xyes; then
-		MINIGUI_LIBS="$MINIGUI_LIBS ../intel/libdrm_intel.la"
-	fi
-# add more MINIGUI_LIBS here
-	AC_SUBST(MINIGUI_LIBS)
-fi
-
 AM_CONDITIONAL(HAVE_INSTALL_TESTS, [test "x$INSTALL_TESTS" = xyes])
 
 AC_ARG_ENABLE([cairo-tests],
@@ -613,5 +602,4 @@ echo "  Freedreno API   $FREEDRENO (kgsl: $FREEDRENO_KGSL)"
 echo "  Tegra API       $TEGRA"
 echo "  VC4 API         $VC4"
 echo "  Etnaviv API     $ETNAVIV"
-echo "  MiniGUI Drivers $MINIGUI"
 echo ""
