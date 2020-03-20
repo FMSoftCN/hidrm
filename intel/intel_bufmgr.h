@@ -176,10 +176,14 @@ drm_intel_bufmgr *drm_intel_bufmgr_gem_init(int fd, int batch_size);
 drm_intel_bo *drm_intel_bo_gem_create_from_name(drm_intel_bufmgr *bufmgr,
 						const char *name,
 						unsigned int handle);
+
+/* VW: Add for HybridOS */
+#define DRM_INTEL_HAVE_CREATE_FROM_HANDLE 1
 drm_intel_bo *drm_intel_bo_gem_create_from_handle(drm_intel_bufmgr *bufmgr,
 						const char *name,
 						unsigned int handle,
 						unsigned long size);
+
 void drm_intel_bufmgr_gem_enable_reuse(drm_intel_bufmgr *bufmgr);
 void drm_intel_bufmgr_gem_enable_fenced_relocs(drm_intel_bufmgr *bufmgr);
 void drm_intel_bufmgr_gem_set_vma_cache_size(drm_intel_bufmgr *bufmgr,

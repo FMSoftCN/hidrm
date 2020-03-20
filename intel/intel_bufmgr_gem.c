@@ -1172,6 +1172,7 @@ err_unref:
 
 /**
  * Returns a drm_intel_bo wrapping the given buffer object handle.
+ * VW: add for HybridOS.
  */
 drm_public drm_intel_bo *
 drm_intel_bo_gem_create_from_handle(drm_intel_bufmgr *bufmgr,
