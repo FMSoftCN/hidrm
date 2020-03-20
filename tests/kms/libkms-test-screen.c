@@ -34,6 +34,9 @@ static void kms_screen_probe(struct kms_screen *screen)
 	con = drmModeGetConnector(device->fd, screen->id);
 	if (!con)
 		return;
+	if (con->count_modes <= 0) {
+		return;
+	}
 
 	screen->type = con->connector_type;
 
